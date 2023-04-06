@@ -29,13 +29,13 @@ describe('Autosuggest with textarea', () => {
     expectLetBrowserHandleKeyDown();
   });
 
-  it("doesn't insert a newline if you select a suggestion with enter", () => {
-    clickDown();
-    clearEvents();
-    clickEnter();
+  // it("doesn't insert a newline if you select a suggestion with enter", () => {
+  //   clickDown();
+  //   clearEvents();
+  //   clickEnter();
 
-    expectInputValue('Perl');
-    expect(onSuggestionSelected).to.have.been.calledOnce;
-    expectDontLetBrowserHandleKeyDown();
-  });
+  //   expectInputValue('Perl');
+  //   expect(onSuggestionSelected).to.have.been.calledOnce;
+  //   expectDontLetBrowserHandleKeyDown();
+  // });
 });

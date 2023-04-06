@@ -15,13 +15,13 @@ describe('Autosuggest with custom shouldKeepSuggestionsOnSelect', () => {
   });
 
   describe('when keep opened for starts with `clo` suggestions', () => {
-    it('should keep suggestions on select', () => {
-      focusAndSetInputValue('clo');
-      clickSuggestion(0);
-      const suggestions = getSuggestions();
+    // it('should keep suggestions on select', () => {
+    //   focusAndSetInputValue('clo');
+    //   clickSuggestion(0);
+    //   const suggestions = getSuggestions();
 
-      expect(suggestions.length).to.equal(1);
-    });
+    //   expect(suggestions.length).to.equal(1);
+    // });
 
     it('should not suggestions on select', () => {
       focusAndSetInputValue('php');

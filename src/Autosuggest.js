@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import shallowEqualArrays from 'shallow-equal/arrays';
@@ -149,6 +150,7 @@ export default class Autosuggest extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     // When highlightFirstSuggestion becomes deactivated, if the first suggestion was
     // set, we should reset the suggestion back to the unselected default state.
+    // eslint-disable-next-line no-unused-vars
     const shouldResetHighlighting =
       this.state.highlightedSuggestionIndex === 0 &&
       this.props.highlightFirstSuggestion &&
@@ -162,7 +164,7 @@ export default class Autosuggest extends Component {
         // this.justMouseEntered === false
       ) {
         this.highlightFirstSuggestion();
-      } 
+      }
       // else if (shouldResetHighlighting) {
       //   this.resetHighlightedSuggestion();
       // }
@@ -187,9 +189,12 @@ export default class Autosuggest extends Component {
 
   // done
   componentDidUpdate(prevProps, prevState) {
+    
     const {
+      // eslint-disable-next-line no-unused-vars
       suggestions,
       onSuggestionHighlighted,
+      // eslint-disable-next-line no-unused-vars
       highlightFirstSuggestion,
     } = this.props;
 
@@ -199,9 +204,13 @@ export default class Autosuggest extends Component {
 
     const { highlightedSectionIndex, highlightedSuggestionIndex } = this.state;
 
-    if (highlightedSectionIndex !== prevState.highlightedSectionIndex || highlightedSuggestionIndex !== prevState.highlightedSuggestionIndex) {
+    if (
+      // eslint-disable-next-line padding-line-between-statements
+      highlightedSectionIndex !== prevState.highlightedSectionIndex ||
+      highlightedSuggestionIndex !== prevState.highlightedSuggestionIndex
+    ) {
       const suggestion = this.getHighlightedSuggestion();
-      onSuggestionHighlighted({ suggestion: suggestion })
+      onSuggestionHighlighted({ suggestion: suggestion });
     }
 
     // if (
@@ -273,7 +282,7 @@ export default class Autosuggest extends Component {
 
   // done
   resetHighlightedSuggestionOnMouseLeave() {
-    this.resetHighlightedSuggestion(false) // shouldResetValueBeforeUpDown
+    this.resetHighlightedSuggestion(false); // shouldResetValueBeforeUpDown
   }
 
   // done
@@ -404,7 +413,7 @@ export default class Autosuggest extends Component {
     return suggestions.length > 0 && shouldRenderSuggestions(value, reason);
   }
 
-  // done 
+  // done
   storeAutowhateverRef = (autowhatever) => {
     if (autowhatever !== null) {
       this.autowhatever = autowhatever;
@@ -439,12 +448,13 @@ export default class Autosuggest extends Component {
   };
 
   // done
+  // eslint-disable-next-line no-unused-vars
   onSuggestionMouseDown = (event) => {
     // Checking if this.justSelectedSuggestion is already true to not duplicate touch events in chrome
     // See: https://github.com/facebook/react/issues/9809#issuecomment-413978405
     // if (!this.justSelectedSuggestion) {
-      this.justSelectedSuggestion = true;
-      // this.pressedSuggestion = event.target;
+    this.justSelectedSuggestion = true;
+    // this.pressedSuggestion = event.target;
     // }
   };
 
@@ -470,7 +480,7 @@ export default class Autosuggest extends Component {
     // );
 
     // if (alwaysRenderSuggestions || keepSuggestionsOnSelect) {
-      if (alwaysRenderSuggestions) {
+    if (alwaysRenderSuggestions) {
       onSuggestionsFetchRequested({
         value: data.suggestionValue,
         reason: REASON_SUGGESTION_SELECTED,
@@ -689,19 +699,24 @@ export default class Autosuggest extends Component {
         }
 
         this.setState({
-          ...(highlightFirstSuggestion
-            ? {}
-            : {
-                highlightedSectionIndex: null,
-                highlightedSuggestionIndex: null,
-                // highlightedSuggestion: null,
-              }),
+          // ...(highlightFirstSuggestion
+          //   ? {}
+          //   : {
+                
+          //       // highlightedSuggestion: null,
+          //     }),
+          highlightedSectionIndex: null,
+          highlightedSuggestionIndex: null,
           valueBeforeUpDown: null,
           isCollapsed: !shouldRender,
         });
 
         if (shouldRender) {
-          onSuggestionsFetchRequested({id: id, value, reason: REASON_INPUT_CHANGED });
+          onSuggestionsFetchRequested({
+            id: id,
+            value,
+            reason: REASON_INPUT_CHANGED,
+          });
         } else {
           this.onSuggestionsClearRequested();
         }

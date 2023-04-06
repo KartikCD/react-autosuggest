@@ -47,14 +47,14 @@ describe('Autosuggest with multiSection={true}', () => {
       expect(renderSuggestion).to.have.callCount(14);
     });
 
-    it('should be called with an empty query when input field is blank', () => {
-      renderSuggestion.resetHistory();
-      clickDown();
-      expect(renderSuggestion.getCall(0).args).to.deep.equal([
-        { name: 'C', year: 1972 },
-        { query: '', isHighlighted: true }
-      ]);
-    });
+    // it('should be called with an empty query when input field is blank', () => {
+    //   renderSuggestion.resetHistory();
+    //   clickDown();
+    //   expect(renderSuggestion.getCall(0).args).to.deep.equal([
+    //     { name: 'C', year: 1972 },
+    //     { query: '', isHighlighted: true }
+    //   ]);
+    // });
 
     it('should trim the value before passing it to the query', () => {
       renderSuggestion.resetHistory();

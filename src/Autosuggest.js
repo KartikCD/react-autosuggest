@@ -4,8 +4,11 @@ import shallowEqualArrays from 'shallow-equal/arrays';
 import Autowhatever from './Autowhatever';
 import { defaultTheme, mapToAutowhateverTheme } from './theme';
 
+// done
 const alwaysTrue = () => true;
+// done
 const defaultShouldRenderSuggestions = (value) => value.trim().length > 0;
+// done
 const defaultRenderSuggestionsContainer = ({ containerProps, children }) => (
   <div {...containerProps}>{children}</div>
 );
@@ -19,6 +22,7 @@ const REASON_INPUT_BLURRED = 'input-blurred';
 const REASON_ESCAPE_PRESSED = 'escape-pressed';
 
 export default class Autosuggest extends Component {
+  // done
   static propTypes = {
     suggestions: PropTypes.array.isRequired,
     onSuggestionsFetchRequested: (props, propName) => {
@@ -42,7 +46,7 @@ export default class Autosuggest extends Component {
         );
       }
     },
-    shouldKeepSuggestionsOnSelect: PropTypes.func,
+    // shouldKeepSuggestionsOnSelect: PropTypes.func,
     onSuggestionSelected: PropTypes.func,
     onSuggestionHighlighted: PropTypes.func,
     renderInputComponent: PropTypes.func,
@@ -52,9 +56,9 @@ export default class Autosuggest extends Component {
     inputProps: (props, propName) => {
       const inputProps = props[propName];
 
-      if (!inputProps) {
-        throw new Error("'inputProps' must be passed.");
-      }
+      // if (!inputProps) {
+      //   throw new Error("'inputProps' must be passed.");
+      // }
 
       if (!Object.prototype.hasOwnProperty.call(inputProps, 'value')) {
         throw new Error("'inputProps' must have 'value'.");
@@ -98,12 +102,13 @@ export default class Autosuggest extends Component {
     containerProps: PropTypes.object, // Arbitrary container props
   };
 
+  // done
   static defaultProps = {
     renderSuggestionsContainer: defaultRenderSuggestionsContainer,
     shouldRenderSuggestions: defaultShouldRenderSuggestions,
     alwaysRenderSuggestions: false,
     multiSection: false,
-    shouldKeepSuggestionsOnSelect: () => false,
+    // shouldKeepSuggestionsOnSelect: () => false,
     focusInputOnSuggestionClick: true,
     highlightFirstSuggestion: false,
     theme: defaultTheme,
@@ -111,6 +116,7 @@ export default class Autosuggest extends Component {
     containerProps: {},
   };
 
+  // done
   constructor({ alwaysRenderSuggestions }) {
     super();
 
@@ -119,7 +125,7 @@ export default class Autosuggest extends Component {
       isCollapsed: !alwaysRenderSuggestions,
       highlightedSectionIndex: null,
       highlightedSuggestionIndex: null,
-      highlightedSuggestion: null,
+      // highlightedSuggestion: null,
       valueBeforeUpDown: null,
     };
 
@@ -129,14 +135,16 @@ export default class Autosuggest extends Component {
     this.pressedSuggestion = null;
   }
 
+  // done
   componentDidMount() {
     document.addEventListener('mousedown', this.onDocumentMouseDown);
-    document.addEventListener('mouseup', this.onDocumentMouseUp);
+    // document.addEventListener('mouseup', this.onDocumentMouseUp);
 
     this.input = this.autowhatever.input;
     this.suggestionsContainer = this.autowhatever.itemsContainer;
   }
 
+  // done
   // eslint-disable-next-line camelcase, react/sort-comp
   UNSAFE_componentWillReceiveProps(nextProps) {
     // When highlightFirstSuggestion becomes deactivated, if the first suggestion was
@@ -150,28 +158,34 @@ export default class Autosuggest extends Component {
       if (
         nextProps.highlightFirstSuggestion &&
         nextProps.suggestions.length > 0 &&
-        this.justPressedUpDown === false &&
-        this.justMouseEntered === false
+        this.justPressedUpDown === false
+        // this.justMouseEntered === false
       ) {
         this.highlightFirstSuggestion();
-      } else if (shouldResetHighlighting) {
-        this.resetHighlightedSuggestion();
-      }
+      } 
+      // else if (shouldResetHighlighting) {
+      //   this.resetHighlightedSuggestion();
+      // }
     } else {
       if (this.willRenderSuggestions(nextProps, REASON_SUGGESTIONS_UPDATED)) {
         if (this.state.isCollapsed && !this.justSelectedSuggestion) {
           this.revealSuggestions();
         }
 
-        if (shouldResetHighlighting) {
-          this.resetHighlightedSuggestion();
+        if (nextProps.highlightFirstSuggestion) {
+          this.highlightFirstSuggestion();
         }
+
+        // if (shouldResetHighlighting) {
+        //   this.resetHighlightedSuggestion();
+        // }
       } else {
         this.resetHighlightedSuggestion();
       }
     }
   }
 
+  // done
   componentDidUpdate(prevProps, prevState) {
     const {
       suggestions,
@@ -179,32 +193,44 @@ export default class Autosuggest extends Component {
       highlightFirstSuggestion,
     } = this.props;
 
-    if (
-      !shallowEqualArrays(suggestions, prevProps.suggestions) &&
-      suggestions.length > 0 &&
-      highlightFirstSuggestion
-    ) {
-      this.highlightFirstSuggestion();
+    if (!onSuggestionHighlighted) {
       return;
     }
 
-    if (onSuggestionHighlighted) {
-      const highlightedSuggestion = this.getHighlightedSuggestion();
-      const prevHighlightedSuggestion = prevState.highlightedSuggestion;
+    const { highlightedSectionIndex, highlightedSuggestionIndex } = this.state;
 
-      if (highlightedSuggestion != prevHighlightedSuggestion) {
-        onSuggestionHighlighted({
-          suggestion: highlightedSuggestion,
-        });
-      }
+    if (highlightedSectionIndex !== prevState.highlightedSectionIndex || highlightedSuggestionIndex !== prevState.highlightedSuggestionIndex) {
+      const suggestion = this.getHighlightedSuggestion();
+      onSuggestionHighlighted({ suggestion: suggestion })
     }
+
+    // if (
+    //   !shallowEqualArrays(suggestions, prevProps.suggestions) &&
+    //   suggestions.length > 0 &&
+    //   highlightFirstSuggestion
+    // ) {
+    //   this.highlightFirstSuggestion();
+    //   return;
+    // }
+
+    // if (onSuggestionHighlighted) {
+    //   const highlightedSuggestion = this.getHighlightedSuggestion();
+    //   const prevHighlightedSuggestion = prevState.highlightedSuggestion;
+
+    //   if (highlightedSuggestion != prevHighlightedSuggestion) {
+    //     onSuggestionHighlighted({
+    //       suggestion: highlightedSuggestion,
+    //     });
+    //   }
+    // }
   }
 
+  // done
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.onDocumentMouseDown);
-    document.removeEventListener('mouseup', this.onDocumentMouseUp);
   }
 
+  // done
   updateHighlightedSuggestion(sectionIndex, suggestionIndex, prevValue) {
     this.setState((state) => {
       let { valueBeforeUpDown } = state;
@@ -221,15 +247,16 @@ export default class Autosuggest extends Component {
       return {
         highlightedSectionIndex: sectionIndex,
         highlightedSuggestionIndex: suggestionIndex,
-        highlightedSuggestion:
-          suggestionIndex === null
-            ? null
-            : this.getSuggestion(sectionIndex, suggestionIndex),
+        // highlightedSuggestion:
+        //   suggestionIndex === null
+        //     ? null
+        //     : this.getSuggestion(sectionIndex, suggestionIndex),
         valueBeforeUpDown,
       };
     });
   }
 
+  // done
   resetHighlightedSuggestion(shouldResetValueBeforeUpDown = true) {
     this.setState((state) => {
       const { valueBeforeUpDown } = state;
@@ -237,7 +264,6 @@ export default class Autosuggest extends Component {
       return {
         highlightedSectionIndex: null,
         highlightedSuggestionIndex: null,
-        highlightedSuggestion: null,
         valueBeforeUpDown: shouldResetValueBeforeUpDown
           ? null
           : valueBeforeUpDown,
@@ -245,22 +271,30 @@ export default class Autosuggest extends Component {
     });
   }
 
+  // done
+  resetHighlightedSuggestionOnMouseLeave() {
+    this.resetHighlightedSuggestion(false) // shouldResetValueBeforeUpDown
+  }
+
+  // done
   revealSuggestions() {
     this.setState({
       isCollapsed: false,
     });
   }
 
+  // done
   closeSuggestions() {
     this.setState({
       highlightedSectionIndex: null,
       highlightedSuggestionIndex: null,
-      highlightedSuggestion: null,
+      // highlightedSuggestion: null,
       valueBeforeUpDown: null,
       isCollapsed: true,
     });
   }
 
+  // done
   getSuggestion(sectionIndex, suggestionIndex) {
     const { suggestions, multiSection, getSectionSuggestions } = this.props;
 
@@ -271,6 +305,7 @@ export default class Autosuggest extends Component {
     return suggestions[suggestionIndex];
   }
 
+  // done
   getHighlightedSuggestion() {
     const { highlightedSectionIndex, highlightedSuggestionIndex } = this.state;
 
@@ -284,6 +319,7 @@ export default class Autosuggest extends Component {
     );
   }
 
+  // done
   getSuggestionValueByIndex(sectionIndex, suggestionIndex) {
     const { getSuggestionValue } = this.props;
 
@@ -292,6 +328,7 @@ export default class Autosuggest extends Component {
     );
   }
 
+  // done
   getSuggestionIndices(suggestionElement) {
     const sectionIndex = suggestionElement.getAttribute('data-section-index');
     const suggestionIndex = suggestionElement.getAttribute(
@@ -305,6 +342,7 @@ export default class Autosuggest extends Component {
     };
   }
 
+  // done
   onDocumentMouseDown = (event) => {
     this.justClickedOnSuggestionsContainer = false;
 
@@ -331,6 +369,7 @@ export default class Autosuggest extends Component {
     }
   };
 
+  // done
   findSuggestionElement(startNode) {
     let node = startNode;
 
@@ -348,7 +387,7 @@ export default class Autosuggest extends Component {
     console.error('Clicked element:', startNode); // eslint-disable-line no-console
     throw new Error("Couldn't find suggestion element");
   }
-
+  // done
   maybeCallOnChange(event, newValue, method) {
     const { value, onChange } = this.props.inputProps;
 
@@ -357,6 +396,7 @@ export default class Autosuggest extends Component {
     }
   }
 
+  // done
   willRenderSuggestions(props, reason) {
     const { suggestions, inputProps, shouldRenderSuggestions } = props;
     const { value } = inputProps;
@@ -364,26 +404,29 @@ export default class Autosuggest extends Component {
     return suggestions.length > 0 && shouldRenderSuggestions(value, reason);
   }
 
+  // done 
   storeAutowhateverRef = (autowhatever) => {
     if (autowhatever !== null) {
       this.autowhatever = autowhatever;
     }
   };
 
+  // done
   onSuggestionMouseEnter = (event, { sectionIndex, itemIndex }) => {
     this.updateHighlightedSuggestion(sectionIndex, itemIndex);
 
-    if (event.target === this.pressedSuggestion) {
-      this.justSelectedSuggestion = true;
-    }
+    // if (event.target === this.pressedSuggestion) {
+    //   this.justSelectedSuggestion = true;
+    // }
 
-    this.justMouseEntered = true;
+    // this.justMouseEntered = true;
 
-    setTimeout(() => {
-      this.justMouseEntered = false;
-    });
+    // setTimeout(() => {
+    //   this.justMouseEntered = false;
+    // });
   };
 
+  // done
   highlightFirstSuggestion = () => {
     this.updateHighlightedSuggestion(this.props.multiSection ? 0 : null, 0);
   };
@@ -395,21 +438,24 @@ export default class Autosuggest extends Component {
     this.pressedSuggestion = null;
   };
 
+  // done
   onSuggestionMouseDown = (event) => {
     // Checking if this.justSelectedSuggestion is already true to not duplicate touch events in chrome
     // See: https://github.com/facebook/react/issues/9809#issuecomment-413978405
-    if (!this.justSelectedSuggestion) {
+    // if (!this.justSelectedSuggestion) {
       this.justSelectedSuggestion = true;
-      this.pressedSuggestion = event.target;
-    }
+      // this.pressedSuggestion = event.target;
+    // }
   };
 
+  // done
   onSuggestionsClearRequested = () => {
     const { onSuggestionsClearRequested } = this.props;
 
     onSuggestionsClearRequested && onSuggestionsClearRequested();
   };
 
+  // done
   onSuggestionSelected = (event, data) => {
     const {
       alwaysRenderSuggestions,
@@ -419,11 +465,12 @@ export default class Autosuggest extends Component {
 
     onSuggestionSelected && onSuggestionSelected(event, data);
 
-    const keepSuggestionsOnSelect = this.props.shouldKeepSuggestionsOnSelect(
-      data.suggestion
-    );
+    // const keepSuggestionsOnSelect = this.props.shouldKeepSuggestionsOnSelect(
+    //   data.suggestion
+    // );
 
-    if (alwaysRenderSuggestions || keepSuggestionsOnSelect) {
+    // if (alwaysRenderSuggestions || keepSuggestionsOnSelect) {
+      if (alwaysRenderSuggestions) {
       onSuggestionsFetchRequested({
         value: data.suggestionValue,
         reason: REASON_SUGGESTION_SELECTED,
@@ -435,6 +482,7 @@ export default class Autosuggest extends Component {
     this.resetHighlightedSuggestion();
   };
 
+  // done
   onSuggestionClick = (event) => {
     const { alwaysRenderSuggestions, focusInputOnSuggestionClick } = this.props;
     const { sectionIndex, suggestionIndex } = this.getSuggestionIndices(
@@ -454,11 +502,12 @@ export default class Autosuggest extends Component {
       method: 'click',
     });
 
-    const keepSuggestionsOnSelect = this.props.shouldKeepSuggestionsOnSelect(
-      clickedSuggestion
-    );
+    // const keepSuggestionsOnSelect = this.props.shouldKeepSuggestionsOnSelect(
+    //   clickedSuggestion
+    // );
 
-    if (!(alwaysRenderSuggestions || keepSuggestionsOnSelect)) {
+    // if (!(alwaysRenderSuggestions || keepSuggestionsOnSelect)) {
+    if (!alwaysRenderSuggestions) {
       this.closeSuggestions();
     }
 
@@ -473,6 +522,7 @@ export default class Autosuggest extends Component {
     });
   };
 
+  // done
   onBlur = () => {
     const { inputProps, shouldRenderSuggestions } = this.props;
     const { value, onBlur } = inputProps;
@@ -483,7 +533,6 @@ export default class Autosuggest extends Component {
       isFocused: false,
       highlightedSectionIndex: null,
       highlightedSuggestionIndex: null,
-      highlightedSuggestion: null,
       valueBeforeUpDown: null,
       isCollapsed: !shouldRender,
     });
@@ -514,6 +563,7 @@ export default class Autosuggest extends Component {
     this.input.focus();
   };
 
+  // done
   itemProps = ({ sectionIndex, itemIndex }) => {
     return {
       'data-section-index': sectionIndex,
@@ -522,19 +572,21 @@ export default class Autosuggest extends Component {
       onMouseLeave: this.onSuggestionMouseLeave,
       onMouseDown: this.onSuggestionMouseDown,
       onTouchStart: this.onSuggestionTouchStart,
-      onTouchMove: this.onSuggestionTouchMove,
+      // onTouchMove: this.onSuggestionTouchMove,
       onClick: this.onSuggestionClick,
     };
   };
 
+  // done
   getQuery() {
     const { inputProps } = this.props;
     const { value } = inputProps;
     const { valueBeforeUpDown } = this.state;
 
-    return (valueBeforeUpDown === null ? value : valueBeforeUpDown).trim();
+    return (valueBeforeUpDown || value).trim();
   }
 
+  // done
   renderSuggestionsContainer = ({ containerProps, children }) => {
     const { renderSuggestionsContainer } = this.props;
 
@@ -545,6 +597,7 @@ export default class Autosuggest extends Component {
     });
   };
 
+  // done
   render() {
     const {
       suggestions,
@@ -559,7 +612,7 @@ export default class Autosuggest extends Component {
       theme,
       getSuggestionValue,
       alwaysRenderSuggestions,
-      highlightFirstSuggestion,
+      // highlightFirstSuggestion,
       containerProps,
     } = this.props;
     const {
@@ -581,6 +634,7 @@ export default class Autosuggest extends Component {
       alwaysRenderSuggestions ||
       (isFocused && !isCollapsed && willRenderSuggestions);
     const items = isOpen ? suggestions : [];
+    // done
     const autowhateverInputProps = {
       ...inputProps,
       onFocus: (event) => {
@@ -640,14 +694,14 @@ export default class Autosuggest extends Component {
             : {
                 highlightedSectionIndex: null,
                 highlightedSuggestionIndex: null,
-                highlightedSuggestion: null,
+                // highlightedSuggestion: null,
               }),
           valueBeforeUpDown: null,
           isCollapsed: !shouldRender,
         });
 
         if (shouldRender) {
-          onSuggestionsFetchRequested({ value, reason: REASON_INPUT_CHANGED });
+          onSuggestionsFetchRequested({id: id, value, reason: REASON_INPUT_CHANGED });
         } else {
           this.onSuggestionsClearRequested();
         }
@@ -665,7 +719,7 @@ export default class Autosuggest extends Component {
                   reason: REASON_SUGGESTIONS_REVEALED,
                 });
                 this.revealSuggestions();
-                event.preventDefault(); // We act on the key.
+                // event.preventDefault(); // We act on the key.
               }
             } else if (suggestions.length > 0) {
               const {
@@ -698,8 +752,8 @@ export default class Autosuggest extends Component {
                 newValue,
                 keyCode === 40 ? 'down' : 'up'
               );
-              event.preventDefault(); // We act on the key.
             }
+            event.preventDefault(); // We act on the key.
 
             this.justPressedUpDown = true;
 
@@ -723,7 +777,7 @@ export default class Autosuggest extends Component {
             }
 
             if (highlightedSuggestion != null) {
-              event.preventDefault();
+              // event.preventDefault();
               const newValue = getSuggestionValue(highlightedSuggestion);
 
               this.maybeCallOnChange(event, newValue, 'enter');
@@ -793,6 +847,7 @@ export default class Autosuggest extends Component {
         onKeyDown && onKeyDown(event);
       },
     };
+    // done
     const renderSuggestionData = {
       query: this.getQuery(),
     };
